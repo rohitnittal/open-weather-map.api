@@ -1,0 +1,43 @@
+const apiKey = 'YOUR_API_KEY_HERE';
+const apiUrl = http://api.openweathermap.org/data/2.5/weather;
+
+document.getElementById('search-btn').addEventListener('click', searchLocation);
+
+function searchLocation() {
+  const locationInput = document.getElementById('location-input');
+  const location = locationInput.value.trim();
+  if (location) {
+    fetch(${apiUrl}?q=${location}&appid=${apiKey})
+      .then(response => response.json())
+      .then(data => displayWeatherData(data))
+      .catch(error => console.error(error));
+  }
+}
+
+function displayWeatherData(data) {
+  const weatherDataElement = document.getElementById('weather-data');
+  weatherDataElement.innerHTML = '';
+  const currentWeatherElement = document.createElement('div');
+  currentWeatherElement.innerHTML = `
+    <h2>Current Weather</h2>
+    <p>Temperature: ${data.main.temp}°C</p>
+    <p>Humidity: ${data.main.humidity}%</p>
+    <p>Wind Speed: ${data.wind.speed} m/s</p>
+  `;
+  weatherDataElement.appendChild(currentWeatherElement);
+
+  const forecastElement = document.createElement('div');
+  forecastElement.innerHTML = `
+    <h2>Forecast</h2>
+    <ul>
+      ${data.list.map(day => `
+        <li>
+          <p>Date: ${day.dt_txt}</p>
+          <p>Temperature: ${day.main.temp}°C</p>
+          <p>Humidity: ${day.main.humidity}%</p>
+        </li>
+      `).join('')}
+    </ul>
+  `;
+  weatherDataElement.appendChild(forecastElement);
+}
